@@ -1,0 +1,106 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fondo general */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+  line-height: 1.5;
+  padding-bottom: 2rem;
+}
+
+/* Encabezado */
+header {
+  background-color: #009739;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.logo {
+  max-height: 80px;
+  margin-bottom: 0.5rem;
+}
+
+/* Contenedor principal */
+main {
+  background-color: white;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* Etiquetas del formulario */
+form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #009739;
+}
+
+/* Campos de entrada */
+form input,
+form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Botones */
+button {
+  margin-top: 1.5rem;
+  padding: 0.7rem 1.2rem;
+  background-color: #009739;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #007f2f;
+}
+
+/* Botones secundarios */
+.acciones {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.acciones button {
+  flex: 1;
+}
+
+/* Mensaje de confirmación */
+#mensaje {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #007f2f;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  main {
+    padding: 1rem;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+}
+

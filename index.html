@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agrofinca Laguneta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#009739">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.error("Error al registrar SW:", err));
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <img src="logo-agrofinca.jpeg" alt="Logo Agrofinca Laguneta" class="logo">
+    <h1>Registro de Clientes</h1>
+  </header>
+
+  <main>
+    <form id="clienteForm">
+      <label>No. (automático):</label>
+      <input type="text" id="numero" name="numero" readonly>
+
+      <label>Fecha y hora:</label>
+      <input type="text" id="fecha" name="fecha" readonly>
+
+      <label>Nombre del cliente:</label>
+      <input type="text" name="nombre" required>
+
+      <label>Dirección:</label>
+      <input type="text" name="direccion">
+
+      <label>Teléfono:</label>
+      <input type="tel" name="telefono" pattern="[0-9]{8}" title="Debe tener 8 dígitos">
+
+      <label>Coordenadas GPS:</label>
+      <input type="text" id="geo" name="geolocalizacion" readonly>
+
+      <label>Ubicación (nombre del lugar):</label>
+      <input type="text" id="lugar" name="lugar" readonly>
+
+      <label>Pedido:</label>
+      <input type="text" name="pedido" maxlength="20" required>
+
+      <label>Observaciones:</label>
+      <textarea name="observaciones"></textarea>
+
+      <label>Foto del cliente (opcional):</label>
+      <input type="file" name="foto" accept="image/*" capture="environment">
+
+      <button type="submit">Guardar</button>
+    </form>
+
+    <div class="acciones">
+      <button id="exportar">Exportar a Excel</button>
+      <button id="reiniciar">Reiniciar conteo</button>
+    </div>
+
+    <p id="mensaje"></p>
+  </main>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=places"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    let contador = 1;
+    const registros = [];
+
+    const numeroInput = document.getElementById('numero');
+    const fechaInput = document.getElementById('fecha');
+    const geoInput = document.getElementById('geo');
+    const lugarInput = document.getElementById('lugar');
+    const mensaje = document.getElementById('mensaje');
+
+    function obtenerNombreLugar(lat, lng) {
+      const geocoder = new google.maps.Geocoder();
+      const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        lugarInput.value = (status === "OK" && results[0]) ? results[0].formatted_address : "Ubicación no disponible";
+      });
+    }
+
+    function actualizarCampos() {
+      numeroInput.value = contador;
+      fechaInput.value = new Date().toLocaleString();
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          geoInput.value = `${lat}, ${lng}`;
+          obtenerNombreLugar(lat, lng);
+        }, () => {
+          geoInput.value = "No disponible";
+          lugarInput.value = "No disponible";
+        });
+      }
+    }
+
+    const guardados = localStorage.getItem('clientes');
+    if (guardados) {
+      registros.push(...JSON.parse(guardados));
+      contador = registros.length + 1;
+    }
+
+    actualizarCampos();
+
+    document.getElementById('clienteForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const registro = { No: contador };
+
+      formData.forEach((value, key) => {
+        if (key !== "numero" && key !== "foto") registro[key] = value;
+      });
+
+      registro.fecha = new Date().toLocaleString();
+      registros.push(registro);
+      localStorage.setItem('clientes', JSON.stringify(registros));
+
+      contador++;
+      e.target.reset();
+      actualizarCampos();
+      mensaje.textContent = "✅ Cliente guardado localmente";
+    });
+
+    document.getElementById('exportar').addEventListener('click', () => {
+      const hoja = XLSX.utils.json_to_sheet(registros);
+      const libro = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(libro, hoja, "Clientes");
+      XLSX.writeFile(libro, "clientes.xlsx");
+    });
+
+    document.getElementById('reiniciar').addEventListener('click', () => {
+      if (confirm("¿Reiniciar conteo y borrar todos los registros?")) {
+        localStorage.removeItem('clientes');
+        registros.length = 0;
+        contador = 1;
+        actualizarCampos();
+        mensaje.textContent = "🗑️ Registros eliminados y conteo reiniciado";
+      }
+    });
+  </script>
+</body>
+</html>
