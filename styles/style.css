@@ -1,0 +1,113 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+  background-color: #009739;
+  color: white;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 120px;
+  height: auto;
+}
+
+h1 {
+  margin-top: 10px;
+  font-size: 26px;
+  color: white;
+}
+
+main {
+  background-image: url('finca-panorama.jpeg');
+  background-size: cover;
+  background-position: center;
+  padding: 40px 20px;
+}
+
+form {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid #009739;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #009739;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button {
+  background-color: #d60000;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+button:hover {
+  background-color: #a00000;
+}
+
+#exportar {
+  background-color: #009739;
+}
+
+#exportar:hover {
+  background-color: #00732a;
+}
+
+#reiniciar {
+  background-color: #555;
+}
+
+#reiniciar:hover {
+  background-color: #333;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    max-width: 100px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  form {
+    padding: 15px;
+  }
+
+  input, textarea {
+    font-size: 13px;
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
